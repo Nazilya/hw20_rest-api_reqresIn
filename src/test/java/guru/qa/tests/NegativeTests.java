@@ -1,0 +1,84 @@
+package guru.qa.tests;
+
+import guru.qa.models.RequestAuthorizationModel;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+
+import static guru.qa.spec.Specs.request;
+import static io.qameta.allure.Allure.step;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.is;
+
+@Tag("APITests")
+public class NegativeTests{
+    public String GET_USERS_LIST_ENDPOINT = "/users",
+            LOGIN_ENDPOINT = "/login";
+
+
+    @DisplayName("проверка неудачной авторизации (без логина и пароля)")
+    @Test
+    void unSupportedMediaTypeTest() {
+        step("попытка авторизации без логина и пароля", () -> {
+            given(request)
+                    .when()
+                    .post(LOGIN_ENDPOINT)
+                    .then()
+                    .log().status()
+                    .log().body()
+                    .statusCode(400)
+                    .body("error", is("Missing email or username"));
+        });
+    }
+
+    @DisplayName("проверка неудачной авторизации (отсутствует пароль)")
+    @Test
+    void missingPasswordTest() {
+        step("попытка авторизации пароля", () -> {
+            RequestAuthorizationModel data = new RequestAuthorizationModel();
+            data.setEmail("eve.holt@reqres.in");
+            data.setPassword("");
+
+            given()
+                    .spec(request)
+                    .body(data)
+                    .when()
+                    .post(LOGIN_ENDPOINT)
+                    .then()
+                    .log().status()
+                    .log().body()
+                    .statusCode(400)
+                    .body("error", is("Missing password"));
+        });
+    }
+
+    @DisplayName("получить польз-ля по несуществующему id (негативный сценарий)")
+    @Test
+    void getUserByInvalidIdNegativeTest() {
+        step("получить польз-ля по несуществующему id", () -> {
+            given(request)
+                    .when()
+                    .get("/api/users/0")
+                    .then()
+                    .log().status()
+                    .log().body()
+                    .statusCode(404);
+        });
+    }
+
+    @DisplayName("получить список пользователей несуществующей страницы (негативный сценарий)")
+    @Test
+    void getListUsersByWrongPageNumberNegativeTest() {
+        step("получить список пользователей несуществующей страницы", () -> {
+            given(request)
+                    .when()
+                    .param("page", 0)
+                    .post(GET_USERS_LIST_ENDPOINT)
+                    .then()
+                    .log().status()
+                    .log().body()
+                    .statusCode(400);
+        });
+    }
+
+}
