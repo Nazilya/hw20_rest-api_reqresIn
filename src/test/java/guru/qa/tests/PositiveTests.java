@@ -1,10 +1,12 @@
 package guru.qa.tests;
 
+import guru.qa.helpers.TestData;
 import guru.qa.models.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import static guru.qa.helpers.Endpoints.*;
 import static guru.qa.spec.Specs.*;
 import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.given;
@@ -14,19 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Tag("APITests")
 public class PositiveTests {
-    public String CREATE_ENDPOINT = "/users",
-            DELETE_ENDPOINT = "/users/2",
-            UPDATE_ENDPOINT = "/users/2",
-            GET_USER_ENDPOINT = "/users/2",
-            GET_USERS_LIST_ENDPOINT = "/users",
-            LOGIN_ENDPOINT = "/login";
-
-    String usersName = "morpheus",
-            usersJob = "leader",
-            usersNewJob = "manager",
-            email = "eve.holt@reqres.in",
-            password = "cityslicka";
-
+    TestData testData = new TestData();
 
     @Tag("APITests")
     @DisplayName("проверка успешной авторизации по логину и паролю")
@@ -34,8 +24,8 @@ public class PositiveTests {
     void loginTest() {
         step("проверка успешной авторизации по логину и паролю", () -> {
             RequestAuthorizationModel data = new RequestAuthorizationModel();
-            data.setEmail(email);
-            data.setPassword(password);
+            data.setEmail(testData.getEmail());
+            data.setPassword(testData.getPassword());
 
             given(request)
                     .body(data)
@@ -45,7 +35,7 @@ public class PositiveTests {
                     .log().status()
                     .log().body()
                     .spec(responseSpec)
-                    .body("token", is("QpwL5tke4Pnpja7X4"));
+                    .body("token", is(testData.getToken()));
         });
     }
 
@@ -54,8 +44,8 @@ public class PositiveTests {
     void createUserWithModelTest() {
         step("создать нового пользователя", () -> {
             RequestUserModel user = new RequestUserModel();
-            user.setName(usersName);
-            user.setJob(usersJob);
+            user.setName(testData.getUsersName());
+            user.setJob(testData.getUsersJob());
 
             given()
                     .spec(request)
@@ -66,8 +56,8 @@ public class PositiveTests {
                     .log().status()
                     .log().body()
                     .spec(responseSpec201)
-                    .body("name", is(usersName))
-                    .body("job", is(usersJob));
+                    .body("name", is(testData.getUsersName()))
+                    .body("job", is(testData.getUsersJob()));
         });
     }
 
@@ -75,7 +65,10 @@ public class PositiveTests {
     @Test
     void updateUserTest() {
         step("обновить данные созданного польз-ля", () -> {
-            CreateUserByBuilder user = CreateUserByBuilder.builder().name(usersName).job(usersNewJob).build();
+            CreateUserByBuilder user = CreateUserByBuilder.builder()
+                    .name(testData.getUsersName())
+                    .job(testData.getUsersNewJob())
+                    .build();
 
             given()
                     .spec(request)
@@ -86,8 +79,8 @@ public class PositiveTests {
                     .log().status()
                     .log().body()
                     .spec(responseSpec)
-                    .body("name", is(usersName))
-                    .body("job", is(usersNewJob));
+                    .body("name", is(testData.getUsersName()))
+                    .body("job", is(testData.getUsersNewJob()));
         });
     }
 

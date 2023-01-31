@@ -1,20 +1,21 @@
 package guru.qa.tests;
 
+import guru.qa.helpers.TestData;
 import guru.qa.models.RequestAuthorizationModel;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import static guru.qa.helpers.Endpoints.GET_USERS_LIST_ENDPOINT;
+import static guru.qa.helpers.Endpoints.LOGIN_ENDPOINT;
 import static guru.qa.spec.Specs.request;
 import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
 
 @Tag("APITests")
-public class NegativeTests{
-    public String GET_USERS_LIST_ENDPOINT = "/users",
-            LOGIN_ENDPOINT = "/login";
-
+public class NegativeTests {
+    TestData testData = new TestData();
 
     @DisplayName("проверка неудачной авторизации (без логина и пароля)")
     @Test
@@ -27,7 +28,7 @@ public class NegativeTests{
                     .log().status()
                     .log().body()
                     .statusCode(400)
-                    .body("error", is("Missing email or username"));
+                    .body("error", is(testData.getErrorMessage()));
         });
     }
 
@@ -48,7 +49,7 @@ public class NegativeTests{
                     .log().status()
                     .log().body()
                     .statusCode(400)
-                    .body("error", is("Missing password"));
+                    .body("error", is(testData.getMissPassError()));
         });
     }
 
