@@ -19,7 +19,7 @@ public class NegativeTests {
 
     @DisplayName("проверка неудачной авторизации (без логина и пароля)")
     @Test
-    void unSupportedMediaTypeTest() {
+    void authorisationWithOutLoginPasswordNegativeTest() {
         step("попытка авторизации без логина и пароля", () -> {
             given(request)
                     .when()
@@ -34,8 +34,8 @@ public class NegativeTests {
 
     @DisplayName("проверка неудачной авторизации (отсутствует пароль)")
     @Test
-    void missingPasswordTest() {
-        step("попытка авторизации пароля", () -> {
+    void authorisationWithOutPasswordNegativeTest() {
+        step("попытка авторизации без пароля", () -> {
             RequestAuthorizationModel data = new RequestAuthorizationModel();
             data.setEmail("eve.holt@reqres.in");
             data.setPassword("");
@@ -53,7 +53,7 @@ public class NegativeTests {
         });
     }
 
-    @DisplayName("получить польз-ля по несуществующему id (негативный сценарий)")
+    @DisplayName("проверка получения польз-ля по несуществующему id")
     @Test
     void getUserByInvalidIdNegativeTest() {
         step("получить польз-ля по несуществующему id", () -> {
@@ -67,7 +67,7 @@ public class NegativeTests {
         });
     }
 
-    @DisplayName("получить список пользователей несуществующей страницы (негативный сценарий)")
+    @DisplayName("проверка получения списка пользователей несуществующей страницы")
     @Test
     void getListUsersByWrongPageNumberNegativeTest() {
         step("получить список пользователей несуществующей страницы", () -> {

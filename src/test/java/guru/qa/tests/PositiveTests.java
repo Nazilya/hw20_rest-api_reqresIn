@@ -39,9 +39,9 @@ public class PositiveTests {
         });
     }
 
-    @DisplayName("создать нового польз-ля")
+    @DisplayName("проверка создания нового польз-ля")
     @Test
-    void createUserWithModelTest() {
+    void createUserTest() {
         step("создать нового пользователя", () -> {
             RequestUserModel user = new RequestUserModel();
             user.setName(testData.getUsersName());
@@ -61,7 +61,7 @@ public class PositiveTests {
         });
     }
 
-    @DisplayName("обновить данные созданного польз-ля")
+    @DisplayName("проверка обновления данных созданного польз-ля")
     @Test
     void updateUserTest() {
         step("обновить данные созданного польз-ля", () -> {
@@ -84,7 +84,7 @@ public class PositiveTests {
         });
     }
 
-    @DisplayName("Удалить пользователя")
+    @DisplayName("проверка удаления пользователя")
     @Test
     void deleteUserTest() {
         step("удалить пользователя", () -> {
@@ -96,9 +96,9 @@ public class PositiveTests {
         });
     }
 
-    @DisplayName("получить польз-ля по id")
+    @DisplayName("проверка получения польз-ля по id")
     @Test
-    void getUserByIdWithModelTest() {
+    void getUserByIdTest() {
         step("получить польз-ля по id", () -> {
             ResponseUserModel user = given(request)
                     .when()
@@ -111,9 +111,9 @@ public class PositiveTests {
         });
     }
 
-    @DisplayName("получить список всех пользователей (позитивный сценарий)")
+    @DisplayName("проверка получения списка всех пользователей")
     @Test
-    void getListUsersByPageNumberPositiveTest() {
+    void getListUsersByPageNumberTest() {
         step("получить список всех пользователей", () -> {
             ResponseListUsersModel listUsers = given()
                     .spec(request)
