@@ -19,7 +19,7 @@ public class NegativeTests {
 
     @DisplayName("проверка неудачной авторизации (без логина и пароля)")
     @Test
-    void authorisationWithOutLoginPasswordNegativeTest() {
+    void authorizationWithOutLoginPasswordNegativeTest() {
         step("попытка авторизации без логина и пароля", () -> {
             given(request)
                     .when()
@@ -34,7 +34,7 @@ public class NegativeTests {
 
     @DisplayName("проверка неудачной авторизации (отсутствует пароль)")
     @Test
-    void authorisationWithOutPasswordNegativeTest() {
+    void authorizationWithOutPasswordNegativeTest() {
         step("попытка авторизации без пароля", () -> {
             RequestAuthorizationModel data = new RequestAuthorizationModel();
             data.setEmail("eve.holt@reqres.in");
