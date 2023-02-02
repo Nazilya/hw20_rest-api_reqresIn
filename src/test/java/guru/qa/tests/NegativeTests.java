@@ -1,10 +1,12 @@
 package guru.qa.tests;
 
 import guru.qa.helpers.TestData;
-import guru.qa.models.RequestAuthorizationModel;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static guru.qa.helpers.Endpoints.GET_USERS_LIST_ENDPOINT;
 import static guru.qa.helpers.Endpoints.LOGIN_ENDPOINT;
@@ -36,9 +38,9 @@ public class NegativeTests {
     @Test
     void authorizationWithOutPasswordNegativeTest() {
         step("попытка авторизации без пароля", () -> {
-            RequestAuthorizationModel data = new RequestAuthorizationModel();
-            data.setEmail("eve.holt@reqres.in");
-            data.setPassword("");
+            Map<String, String> data = new HashMap<>();
+            data.put("email", testData.getEmail());
+            data.put("password", "");
 
             given()
                     .spec(request)

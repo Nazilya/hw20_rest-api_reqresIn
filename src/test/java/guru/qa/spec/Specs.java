@@ -17,6 +17,7 @@ public class Specs {
             .basePath(Config.basePath())
             .log().uri()
             .log().method()
+            .log().body()
             .filter(withCustomTemplates())
             //.log().all()
             .contentType(ContentType.JSON);

@@ -6,6 +6,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static guru.qa.helpers.Endpoints.*;
 import static guru.qa.spec.Specs.*;
 import static io.qameta.allure.Allure.step;
@@ -23,9 +27,9 @@ public class PositiveTests {
     @Test
     void loginTest() {
         step("проверка успешной авторизации по логину и паролю", () -> {
-            RequestAuthorizationModel data = new RequestAuthorizationModel();
-            data.setEmail(testData.getEmail());
-            data.setPassword(testData.getPassword());
+            Map<String, String> data = new HashMap<>();
+            data.put("email", testData.getEmail());
+            data.put("password", testData.getPassword());
 
             given(request)
                     .body(data)
