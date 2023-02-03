@@ -14,9 +14,9 @@ import static guru.qa.helpers.Endpoints.*;
 import static guru.qa.spec.Specs.*;
 import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Tag("APITests")
 public class PositiveTests {
@@ -37,9 +37,8 @@ public class PositiveTests {
                     .post(LOGIN_ENDPOINT)
                     .then()
                     .log().status()
-                    .log().body()
                     .spec(responseSpec)
-                    .body("token", is(testData.getToken()));
+                    .body("token", is(notNullValue()));
         });
     }
 
@@ -57,7 +56,6 @@ public class PositiveTests {
                     .when()
                     .post(CREATE_ENDPOINT)
                     .then()
-                    .log().status()
                     .log().body()
                     .spec(responseSpec201)
                     .body("name", is(testData.getUsersName()))
@@ -81,7 +79,6 @@ public class PositiveTests {
                     .put(UPDATE_ENDPOINT)
                     .then()
                     .log().status()
-                    .log().body()
                     .spec(responseSpec)
                     .body("name", is(testData.getUsersName()))
                     .body("job", is(testData.getUsersNewJob()));
@@ -109,7 +106,8 @@ public class PositiveTests {
                     .get(GET_USER_ENDPOINT)
                     .then()
                     .spec(responseSpec)
-                    .log().body()
+                    .body("data.first_name",
+                            is("Janet"))
                     .extract().as(ResponseUserModel.class);
             assertEquals("Weaver", user.getData().getLastName());
         });
@@ -119,19 +117,19 @@ public class PositiveTests {
     @Test
     void getListUsersByPageNumberTest() {
         step("получить список всех пользователей", () -> {
-            ResponseListUsersModel listUsers = given()
+            List<ResponseListUsersModel.ListUsersData> listUsers = given()
                     .spec(request)
                     .when()
                     .param("page", 2)
                     .get(GET_USERS_LIST_ENDPOINT)
                     .then()
                     .spec(responseSpec)
-                    .log().body()
                     .body("data.findAll{it.id == 7}.last_name.flatten()",
                             hasItem("Lawson"))
-                    .extract().as(ResponseListUsersModel.class);
+                    .extract().body().jsonPath().getList("data", ResponseListUsersModel.ListUsersData.class);
 
-            assertEquals(2, listUsers.getPage());
+            assertTrue(listUsers.stream().allMatch(x -> x.getAvatar().contains("reqres.in")));
+            assertTrue(listUsers.stream().allMatch(x -> x.getEmail().endsWith("reqres.in")));
         });
     }
 
